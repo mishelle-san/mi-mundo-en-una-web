@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diario Digital - Mishelle Yaira</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&family=Josefin+Sans:wght@300;400;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        mocca: {
+                            bg: '#FBF9F8',
+                            card: '#FFFFFF',
+                            dark: '#2A1A18',
+                            brown: '#4A322C',
+                            lightBrown: '#7A5E57',
+                            warmBg: '#EFEAE6',
+                            accent: '#9E8279',
+                            soft: '#F4EFEA',
+                            nightBg: '#120B0A',
+                            nightCard: '#1C1210',
+                            nightBorder: '#3A2420'
+                        },
+                        turquoise: {
+                            soft: '#A2E8DD',
+                            mint: '#79D7C9',
+                            dark: '#2E8B82',
+                            glow: '#56E3D1'
+                        },
+                        gold: {
+                            light: '#FDE68A',
+                            glow: '#F59E0B',
+                            dark: '#D97706'
+                        }
+                    },
+                    fontFamily: {
+                        playfair: ['Playfair Display', 'serif'],
+                        bodoni: ['Bodoni Moda', 'serif'],
+                        cormorant: ['Cormorant Garamond', 'serif'],
+                        baskerville: ['Libre Baskerville', 'serif'],
+                        josefin: ['Josefin Sans', 'sans-serif'],
+                        script: ['Great Vibes', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FBF9F8;
+            background-image: radial-gradient(rgba(74, 50, 44, 0.05) 1.5px, transparent 1.5px);
+            background-size: 32px 32px;
+            font-family: 'Libre Baskerville', serif;
+            transition: background-color 0.6s ease, color 0.6s ease;
+        }
+        body.dark {
+            background-color: #120B0A;
+            background-image: radial-gradient(rgba(162, 232, 221, 0.07) 1.5px, transparent 1.5px);
+            color: #F4EFEA;
+        }
+        .old-money-title { font-family: 'Playfair Display', serif; letter-spacing: 0.05em; }
+        .old-money-header { font-family: 'Bodoni Moda', serif; letter-spacing: 0.08em; }
+        .old-money-script { font-family: 'Great Vibes', cursive; }
+        .old-money-subtitle { font-family: 'Cormorant Garamond', serif; font-style: italic; }
+        .old-money-sans { font-family: 'Josefin Sans', sans-serif; letter-spacing: 0.15em; }
+        .mocca-border {
+            border: 1px solid rgba(122, 94, 87, 0.2);
+            box-shadow: 0 15px 35px -10px rgba(42, 26, 24, 0.06);
+            transition: all 0.5s ease;
+        }
+        body.dark .mocca-border {
+            border-color: rgba(162, 232, 221, 0.2);
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
+            background-color: #1C1210;
+        }
+        .polaroid-old-money {
+            background: #FFFFFF;
+            padding: 12px 12px 20px 12px;
+            border-radius: 4px;
+            box-shadow: 0 15px 30px -8px rgba(42, 26, 24, 0.08), 0 0 0 1px rgba(122, 94, 87, 0.15);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        body.dark .polaroid-old-money {
+            background: #241715;
+            box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(162, 232, 221, 0.2);
+        }
+        .polaroid-old-money:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            box-shadow: 0 25px 45px -12px rgba(42, 26, 24, 0.2), 0 0 25px rgba(162, 232, 221, 0.4);
+            z-index: 30;
+        }
+        .tape-turquoise {
+            background-color: rgba(162, 232, 221, 0.85);
+            color: #2A1A18;
+            padding: 4px 18px;
+            display: inline-block;
+            font-family: 'Josefin Sans', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.7rem;
+            border-radius: 2px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        body.dark .tape-turquoise { background-color: #79D7C9; color: #120B0A; }
+        ::-webkit-scrollbar { width: 7px; }
+        ::-webkit-scrollbar-track { background: #FBF9F8; }
+        body.dark ::-webkit-scrollbar-track { background: #120B0A; }
+        ::-webkit-scrollbar-thumb { background: #9E8279; border-radius: 9999px; }
+        .modal-backdrop { background-color: rgba(42, 26, 24, 0.85); backdrop-filter: blur(10px); }
+        #sparkleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
+        @keyframes goldGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3), 0 0 30px rgba(253, 230, 138, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.6), 0 0 50px rgba(253, 230, 138, 0.5); }
+        }
+        .gold-sparkle-card { animation: goldGlow 3s infinite ease-in-out; background: linear-gradient(135deg, #2A1A18 0%, #4A322C 50%, #2A1A18 100%); border: 2px solid #FDE68A; }
+    </style>
+</head>
+<body class="text-mocca-dark antialiased min-h-screen selection:bg-turquoise-soft selection:text-mocca-dark">
+    
+    <!-- Audio de fondo automático -->
+    <audio id="background-audio" autoplay loop>
+        <source src="vivo.mp3" type="audio/mp3">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+    <canvas id="sparkleCanvas"></canvas>
+    
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-mocca-bg/95 dark:bg-mocca-nightBg/95 backdrop-blur-md border-b border-mocca-brown/15 dark:border-turquoise-soft/20 transition-colors duration-500">
+        <div class="max-w-6xl mx-auto px-6 h-24 flex items-center justify-between">
+            <a href="#" class="old-money-header text-2xl md:text-3xl font-bold tracking-widest text-mocca-dark dark:text-mocca-soft flex items-center gap-3 uppercase">
+                <span class="old-money-script text-turquoise-dark dark:text-turquoise-soft text-4xl capitalize">Mishelle</span> YAIRA
+                <span class="w-2.5 h-2.5 rounded-full bg-turquoise-mint inline-block animate-pulse"></span>
+            </a>
+            <nav class="hidden md:flex space-x-8 old-money-sans text-xs uppercase tracking-widest font-semibold text-mocca-brown dark:text-mocca-soft/80">
+                <a href="#inicio" class="hover:text-mocca-dark dark:hover:text-turquoise-soft transition">Inicio</a>
+                <a href="#cuenta-regresiva" class="hover:text-mocca-dark dark:hover:text-turquoise-soft transition">Mis 15s</a>
+                <a href="#favoritos" class="hover:text-mocca-dark dark:hover:text-turquoise-soft transition">Favoritos</a>
+                <a href="#familia" class="hover:text-mocca-dark dark:hover:text-turquoise-soft transition">Familia</a>
+                <a href="#amigos" class="hover:text-mocca-dark dark:hover:text-turquoise-soft transition">Mis Amigos</a>
+                <a href="#concierto" class="hover:text-mocca-dark dark:hover:text-turquoise-soft transition">Concierto</a>
+            </nav>
+            <button id="moodToggle" onclick="toggleTokyoMood()" class="flex items-center gap-2.5 bg-mocca-dark dark:bg-turquoise-soft text-white dark:text-mocca-dark px-4 py-2.5 rounded-full old-money-sans text-[11px] uppercase tracking-widest font-bold shadow-md hover:scale-105 transition-all duration-300 border border-turquoise-soft/40">
+                <span id="moodIcon">🗼</span>
+                <span id="moodText">NOCHE EN TOKIO</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- HERO SECTION (Imagen 1) -->
+    <section id="inicio" class="py-16 md:py-20 px-4 max-w-5xl mx-auto">
+        <div class="bg-white dark:bg-mocca-nightCard mocca-border rounded-2xl p-8 md:p-14 relative overflow-hidden">
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-turquoise-soft/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="flex flex-col md:flex-row items-center gap-10 md:gap-14 relative z-10">
+                <div class="w-full md:w-5/12 flex justify-center">
+                    <div class="polaroid-old-money rotate-[-1.5deg] max-w-xs w-full">
+                        <div class="aspect-[4/5] overflow-hidden rounded bg-mocca-soft dark:bg-mocca-brown/20 flex items-center justify-center relative border border-mocca-brown/10">
+                            <img src="img/foto (1).jpeg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/EFEAE6/2A1A18?text=Mishelle+Yaira';" alt="Mishelle Yaira" class="w-full h-full object-cover">
+                        </div>
+                        <p class="old-money-subtitle text-xl text-center mt-4 text-mocca-dark dark:text-mocca-soft">Mishelle Yaira • XIV años</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-7/12 text-center md:text-left">
+                    <div class="mb-4"><span class="tape-turquoise">Bienvenido a mi pequeño espacio secreto ✨</span></div>
+                    <h1 class="old-money-title text-3xl md:text-5xl font-bold text-mocca-dark dark:text-white mb-4 uppercase tracking-wider leading-tight">
+                        Mishelle <span class="old-money-script text-4xl md:text-6xl text-mocca-lightBrown dark:text-turquoise-soft capitalize font-normal">Yaira</span>
+                    </h1>
+                    <p class="text-sm md:text-base text-mocca-brown dark:text-mocca-soft/90 leading-relaxed mb-6 font-normal">
+                        Nací el 3 de mayo de 2012. Mi signo es Tauro y nací en la ciudad de Huancayo. Actualmente vivo en Lima. Soy estudiante de segundo de secundaria. Amante del arte, el rock en español y los momentos auténticos. Me considero alegre, empática y superexpresiva.
+                    </p>
+                    <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                        <button onclick="openBioModal()" class="inline-flex items-center gap-3 bg-mocca-dark dark:bg-turquoise-soft text-white dark:text-mocca-dark old-money-sans text-xs uppercase px-7 py-4 rounded-full hover:bg-mocca-brown dark:hover:bg-turquoise-mint transition duration-300 shadow-md border border-turquoise-soft/30 font-bold">
+                            <span>Conoce más de mí</span><i data-lucide="sparkles" class="w-4 h-4 text-turquoise-soft dark:text-mocca-dark"></i>
+                        </button>
+                        <a href="#favoritos" class="inline-flex items-center gap-3 bg-mocca-bg dark:bg-mocca-nightBg text-mocca-dark dark:text-mocca-soft old-money-sans text-xs uppercase px-7 py-4 rounded-full hover:bg-mocca-warmBg dark:hover:bg-mocca-brown/40 transition duration-300 border border-mocca-brown/20 dark:border-turquoise-soft/30 font-semibold">
+                            <span>Mis Favoritos</span><i data-lucide="heart" class="w-4 h-4 text-mocca-brown dark:text-turquoise-soft"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COUNTDOWN TO 15TH BIRTHDAY (Imagen 2) -->
+    <section id="cuenta-regresiva" class="py-12 px-4 max-w-5xl mx-auto">
+        <div class="bg-gradient-to-br from-mocca-dark via-mocca-brown to-mocca-dark dark:from-mocca-nightCard dark:via-mocca-dark dark:to-mocca-nightBg text-white rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden border border-turquoise-soft/30">
+            <div class="flex flex-col md:flex-row items-center gap-8 justify-between relative z-10">
+                <div class="w-36 h-36 md:w-44 md:h-44 rounded-full p-1.5 bg-gradient-to-tr from-turquoise-soft via-white to-turquoise-mint shadow-2xl flex-shrink-0 relative group">
+                    <div class="w-full h-full rounded-full overflow-hidden border-2 border-mocca-dark bg-mocca-warmBg">
+                        <img src="img/foto (2).jpeg" onerror="this.onerror=null; this.src='https://placehold.co/300x300/EFEAE6/2A1A18?text=Mishelle+Baby';" alt="Mishelle de Chiquita" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="absolute -bottom-2 -right-2 bg-turquoise-soft text-mocca-dark p-2 rounded-full shadow-lg"><i data-lucide="crown" class="w-5 h-5"></i></div>
+                </div>
+                <div class="flex-1 text-center md:text-left">
+                    <span class="old-money-sans text-[10px] uppercase tracking-widest text-turquoise-soft bg-turquoise-dark/40 border border-turquoise-soft/40 px-4 py-1.5 rounded-full inline-block mb-3 font-semibold">
+                        Rumbo a mis XV Años • 3 de Mayo de 2027
+                    </span>
+                    <h3 class="old-money-title text-2xl md:text-4xl font-bold uppercase tracking-wider mb-2 text-white">
+                        Cuenta Regresiva <span class="old-money-script text-3xl md:text-5xl text-turquoise-soft capitalize font-normal">para mis 15</span>
+                    </h3>
+                    <p class="old-money-subtitle text-lg md:text-xl text-mocca-soft italic my-3">
+                        "El fin de amar es sentirse más vivo" <span class="text-xs uppercase tracking-widest not-italic font-sans text-turquoise-soft block mt-1">— Gustavo Cerati</span>
+                    </p>
+                    <div class="grid grid-cols-4 gap-3 max-w-md mx-auto md:mx-0 mt-6 text-center">
+                        <div class="bg-white/10 dark:bg-black/30 backdrop-blur-md p-3 rounded-xl border border-white/10 dark:border-turquoise-soft/20">
+                            <span id="days" class="old-money-header text-2xl md:text-3xl font-bold text-turquoise-soft block">00</span>
+                            <span class="old-money-sans text-[9px] uppercase tracking-widest text-mocca-soft">Días</span>
+                        </div>
+                        <div class="bg-white/10 dark:bg-black/30 backdrop-blur-md p-3 rounded-xl border border-white/10 dark:border-turquoise-soft/20">
+                            <span id="hours" class="old-money-header text-2xl md:text-3xl font-bold text-turquoise-soft block">00</span>
+                            <span class="old-money-sans text-[9px] uppercase tracking-widest text-mocca-soft">Horas</span>
+                        </div>
+                        <div class="bg-white/10 dark:bg-black/30 backdrop-blur-md p-3 rounded-xl border border-white/10 dark:border-turquoise-soft/20">
+                            <span id="minutes" class="old-money-header text-2xl md:text-3xl font-bold text-turquoise-soft block">00</span>
+                            <span class="old-money-sans text-[9px] uppercase tracking-widest text-mocca-soft">Min</span>
+                        </div>
+                        <div class="bg-white/10 dark:bg-black/30 backdrop-blur-md p-3 rounded-xl border border-white/10 dark:border-turquoise-soft/20">
+                            <span id="seconds" class="old-money-header text-2xl md:text-3xl font-bold text-turquoise-soft block">00</span>
+                            <span class="old-money-sans text-[9px] uppercase tracking-widest text-mocca-soft">Seg</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAPTER II: FAVORITOS -->
+    <section id="favoritos" class="py-16 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <span class="tape-turquoise">Capítulo II</span>
+            <h2 class="old-money-title text-3xl md:text-4xl font-bold text-mocca-dark dark:text-white mt-3 uppercase tracking-widest">
+                Mis Cosas <span class="old-money-script text-4xl md:text-5xl text-mocca-lightBrown dark:text-turquoise-soft capitalize font-normal">Favoritas</span> 💖
+            </h2>
+            <div class="flex flex-wrap justify-center gap-4 mt-8">
+                <button onclick="openFavsModal()" class="inline-flex items-center gap-3 bg-mocca-dark dark:bg-turquoise-soft text-white dark:text-mocca-dark old-money-sans text-xs uppercase tracking-widest px-8 py-4 rounded-full hover:bg-mocca-brown transition duration-300 shadow-md font-bold">
+                    <span>Descubre mis gustos musicales 🎧</span><i data-lucide="music" class="w-4 h-4"></i>
+                </button>
+                <button onclick="openAnecdoteModal()" class="inline-flex items-center gap-3 bg-white dark:bg-mocca-nightCard text-mocca-dark dark:text-mocca-soft old-money-sans text-xs uppercase tracking-widest px-8 py-4 rounded-full hover:bg-mocca-soft transition duration-300 shadow-md font-semibold border border-mocca-brown/20">
+                    <span>El Ambientador en la Refrí 🥛⚠️</span><i data-lucide="laugh" class="w-4 h-4"></i>
+                </button>
+                <button onclick="openRealMeModal()" class="inline-flex items-center gap-3 bg-gradient-to-r from-turquoise-dark via-turquoise-mint to-turquoise-soft text-mocca-dark old-money-sans text-xs uppercase tracking-widest px-8 py-4 rounded-full hover:scale-105 transition duration-300 shadow-lg font-bold animate-pulse">
+                    <span>Fotos donde realmente soy yo 📸✨</span><i data-lucide="camera" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 10 FAST FACTS -->
+        <div class="bg-white dark:bg-mocca-nightCard border border-mocca-brown/20 dark:border-turquoise-soft/20 rounded-2xl p-8 md:p-10 mb-12 shadow-sm relative">
+            <div class="flex items-center justify-between mb-8 border-b border-mocca-brown/15 dark:border-mocca-brown/30 pb-4">
+                <h3 class="old-money-title text-2xl font-bold text-mocca-dark dark:text-white uppercase tracking-wider flex items-center gap-3">
+                    <i data-lucide="zap" class="w-6 h-6 text-turquoise-dark dark:text-turquoise-soft"></i> 10 Datos Rápidos sobre Mí
+                </h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">01. Snack Infaltable</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Makis siempre 🍣 (los de salmón acevichado son mis favoritos)</p></div>
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">02. Pasatiempo Creativo</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Hacer slime fluffy y crear cosas a mano ✨</p></div>
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">03. Canción Favorita</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Crimen / Amor Amarillo (Gustavo Cerati) 🎧</p></div>
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">04. Película Favorita</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Coraline y la Puerta Secreta 🗝️</p></div>
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">05. Destino Soñado</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Tokio, Japón en invierno 🗼❄️</p></div>
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">06. Superpoder</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Hacer sonreír a mi grupo de amigos 🎉</p></div>
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">07. Clima Ideal</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Invierno, abrigos y días fríos ❄️</p></div>
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">08. Orgullo Regional</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Orgullosa de mis raíces de Huancayo 🏔️</p></div>
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">09. Mi Pasión</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Ir a conciertos de rock en vivo 🎸</p></div>
+                <div class="p-4 rounded-xl bg-mocca-soft/60 dark:bg-mocca-dark/60 border border-mocca-brown/10"><span class="old-money-sans text-[10px] text-turquoise-dark dark:text-turquoise-soft font-bold uppercase tracking-widest block mb-1">10. Mi Vibra</span><p class="text-sm font-semibold text-mocca-dark dark:text-mocca-soft">Espontánea, alegre y 100% auténtica ✨</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAMILIA SECTION (Fotos 9, 10, 11, 12, 13, 14, 15, 16) -->
+    <section id="familia" class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="text-center mb-10">
+            <span class="tape-turquoise">Capítulo III</span>
+            <h2 class="old-money-title text-3xl md:text-4xl font-bold text-mocca-dark dark:text-white mt-3 uppercase tracking-widest">
+                Mi Refugio <span class="old-money-script text-4xl md:text-5xl text-mocca-lightBrown dark:text-turquoise-soft capitalize font-normal">Familiar</span> 💖
+            </h2>
+            <p class="old-money-subtitle text-base text-mocca-brown dark:text-mocca-soft/80 mt-2">Los pilares de mi vida, mis padres, Tiggy y nuestros recuerdos inolvidables.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+            <!-- Foto 9 -->
+            <div class="polaroid-old-money rotate-[-1.5deg] text-center"><div class="h-56 rounded bg-mocca-soft overflow-hidden mb-3 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (9).jpeg" alt="Abuelo Juan" class="w-full h-full object-cover"></div><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Abuelo Juan 👴</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">Sabiduría y amor incondicional.</p></div>
+            <!-- Foto 10 -->
+            <div class="polaroid-old-money rotate-[1.5deg] text-center"><div class="h-56 rounded bg-mocca-soft overflow-hidden mb-3 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (10).jpeg" alt="Abuela Luz" class="w-full h-full object-cover"></div><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Abuela Luz 👵</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">La luz y dulzura de nuestro hogar.</p></div>
+            <!-- Foto 11 (Mis Padres) -->
+            <div class="polaroid-old-money rotate-[-1deg] text-center border-2 border-turquoise-soft/50"><div class="h-56 rounded bg-mocca-soft overflow-hidden mb-3 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (11).jpeg" alt="Mis Padres Casamiento" class="w-full h-full object-cover"></div><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Mis Padres 💕</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">El día de su casamiento, mi mayor ejemplo.</p></div>
+            <!-- Foto 12 -->
+            <div class="polaroid-old-money rotate-[1deg] text-center"><div class="h-56 rounded bg-mocca-soft overflow-hidden mb-3 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (12).jpeg" alt="Mi Hermana" class="w-full h-full object-cover"></div><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Mi Hermana Querida 👯‍♀️</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">Cómplice de aventuras y risas.</p></div>
+            <!-- Foto 13 (Prima Leonela) -->
+            <div class="polaroid-old-money rotate-[2deg] text-center"><div class="h-56 rounded bg-mocca-soft overflow-hidden mb-3 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (13).jpeg" alt="Prima Leonela" class="w-full h-full object-cover"></div><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Prima Leonela 🌸</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">Criadas juntas como hermanas.</p></div>
+            <!-- Foto 14 -->
+            <div class="polaroid-old-money rotate-[-2deg] text-center"><div class="h-56 rounded bg-mocca-soft overflow-hidden mb-3 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (14).jpeg" alt="Mis Primos" class="w-full h-full object-cover"></div><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Mis Primos 👦🏽👧🏽</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">Como mis hermanos, unidos desde pequeños.</p></div>
+            <!-- Foto 15 -->
+            <div class="polaroid-old-money rotate-[1.5deg] text-center border-2 border-turquoise-soft/50"><div class="h-56 rounded bg-mocca-soft overflow-hidden mb-3 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (15).jpeg" alt="Mi gatito Tiggy" class="w-full h-full object-cover"></div><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Tiggy 🐾🐱</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">Mi adorado gatito y rey de la casa.</p></div>
+            <!-- Foto 16 -->
+            <div class="polaroid-old-money rotate-[-1deg] text-center"><div class="h-56 rounded bg-mocca-soft overflow-hidden mb-3 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (16).jpeg" alt="Viajes en Familia" class="w-full h-full object-cover"></div><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Vacaciones & Viajes 🏔️✈️</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">Recuerdos hermosos en Cusco y Asia.</p></div>
+        </div>
+    </section>
+
+    <!-- AMIGOS SECTION (Fotos 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27) -->
+    <section id="amigos" class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="text-center mb-10">
+            <span class="tape-turquoise">Capítulo IV</span>
+            <h2 class="old-money-title text-3xl md:text-4xl font-bold text-mocca-dark dark:text-white mt-3 uppercase tracking-widest">
+                Mis Mejores <span class="old-money-script text-4xl md:text-5xl text-turquoise-dark dark:text-turquoise-soft capitalize font-normal">Amigos</span> 💫
+            </h2>
+            <p class="old-money-subtitle text-base text-mocca-brown dark:text-mocca-soft/80 mt-2">Mi tribu del colegio, las risas de cada día y los recuerdos imborrables.</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <!-- Foto 17 -->
+            <div class="polaroid-old-money rotate-[-1deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (17).jpeg" alt="Risco" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Risco 🧠</h5><p class="text-[10px] text-mocca-brown">El más inteligente</p></div>
+            <!-- Foto 18 (Briana) -->
+            <div class="polaroid-old-money rotate-[1.5deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (18).jpeg" alt="Briana" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Briana ✨</h5><p class="text-[10px] text-mocca-brown">Incondicional</p></div>
+            <!-- Foto 19 -->
+            <div class="polaroid-old-money rotate-[-2deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (19).jpeg" alt="Lauren" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Lauren 💖</h5><p class="text-[10px] text-mocca-brown">Aventuras juntos</p></div>
+            <!-- Foto 20 -->
+            <div class="polaroid-old-money rotate-[1deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (20).jpeg" alt="Milen" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Milen 🌸</h5><p class="text-[10px] text-mocca-brown">Vibra bonita</p></div>
+            <!-- Foto 21 -->
+            <div class="polaroid-old-money rotate-[-1.5deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (21).jpeg" alt="Dina" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Dina 💕</h5><p class="text-[10px] text-mocca-brown">Compañera fiel</p></div>
+            <!-- Foto 22 (Rafaela) -->
+            <div class="polaroid-old-money rotate-[2deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (22).jpeg" alt="Rafaela" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Rafaela 🎉</h5><p class="text-[10px] text-mocca-brown">Alegría total</p></div>
+            <!-- Foto 23 -->
+            <div class="polaroid-old-money rotate-[-1.5deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (23).jpeg" alt="Cefas" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Cefas 🎯</h5><p class="text-[10px] text-mocca-brown">Gran amigo</p></div>
+            <!-- Foto 24 -->
+            <div class="polaroid-old-money rotate-[1deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (24).jpeg" alt="Alejandro" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Alejandro 🎸</h5><p class="text-[10px] text-mocca-brown">Buenos momentos</p></div>
+            <!-- Foto 25 -->
+            <div class="polaroid-old-money rotate-[-2deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (25).jpeg" alt="Rafaela Palomino" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Rafaela P. 🌟</h5><p class="text-[10px] text-mocca-brown">Siempre juntas</p></div>
+            <!-- Foto 26 -->
+            <div class="polaroid-old-money rotate-[1.5deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (26).jpeg" alt="Zoe" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Zoe 🎀</h5><p class="text-[10px] text-mocca-brown">Risas infinitas</p></div>
+            <!-- Foto 27 (Angela) -->
+            <div class="polaroid-old-money rotate-[-1deg] text-center"><div class="h-40 rounded bg-mocca-soft overflow-hidden mb-2 border border-mocca-brown/10 flex items-center justify-center"><img src="img/foto (27).jpeg" alt="Angela" class="w-full h-full object-cover"></div><h5 class="old-money-header text-xs font-bold text-mocca-dark dark:text-white">Angela 👑</h5><p class="text-[10px] text-mocca-brown">Súper especial</p></div>
+        </div>
+    </section>
+
+    <!-- SPOTLIGHT: CONCIERTO (Fotos 28 y 29) -->
+    <section id="concierto" class="py-12 px-4 max-w-5xl mx-auto">
+        <div class="bg-white dark:bg-mocca-nightCard border-2 border-turquoise-soft/60 rounded-2xl p-8 md:p-12 shadow-xl relative overflow-hidden">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 border-b border-mocca-brown/15 pb-6">
+                <div>
+                    <span class="tape-turquoise">Hito Personal Inolvidable 🎸✨</span>
+                    <h3 class="old-money-title text-2xl md:text-4xl font-bold text-mocca-dark dark:text-white mt-2 uppercase tracking-wider">
+                        El Día Más Especial <span class="old-money-script text-3xl md:text-5xl text-turquoise-dark dark:text-turquoise-soft capitalize font-normal">de Mi Vida</span>
+                    </h3>
+                </div>
+                <div class="flex items-center gap-2 bg-mocca-soft dark:bg-mocca-dark px-5 py-2.5 rounded-full border border-turquoise-soft/40 shadow-sm flex-shrink-0">
+                    <i data-lucide="ticket" class="w-5 h-5 text-turquoise-dark dark:text-turquoise-soft"></i>
+                    <span class="old-money-sans text-xs font-bold text-mocca-dark dark:text-white uppercase tracking-widest">24 • 05 • 26</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-7 space-y-4 text-xs md:text-sm text-mocca-brown dark:text-mocca-soft/90 leading-relaxed font-normal">
+                    <p class="text-base font-semibold text-mocca-dark dark:text-white">¡Amo con toda mi alma ir a conciertos! He asistido a muchísimos shows de rock en vivo, pero el día más especial de mi vida ocurrió el 24 de mayo de 2026. 🤘🔥</p>
+                    <p>Fui al concierto tributo de <strong>Soda Stereo</strong>. Vivir la energía del show junto a <strong>Charly Alberti</strong> y <strong>Zeta Bosio</strong> rindiendo homenaje a la memoria del inolvidable Gustavo Cerati fue una experiencia que me erizó la piel.</p>
+                    <p>Cantar sus himnos a todo pulmón con mi cartel de <em>"Me verás volver"</em> hizo que esa noche quedara guardada para siempre en mi corazón. 🎶❤️</p>
+                </div>
+                <div class="md:col-span-5 grid grid-cols-2 gap-4">
+                    <!-- Foto 28 -->
+                    <div class="polaroid-old-money rotate-[-2deg] shadow-md"><div class="h-44 rounded bg-mocca-dark overflow-hidden mb-2"><img src="img/foto (28).jpeg" alt="Escenario Soda Stereo" class="w-full h-full object-cover"></div><p class="old-money-subtitle text-center text-xs text-mocca-dark dark:text-white font-semibold">El Escenario 🎸</p></div>
+                    <!-- Foto 29 -->
+                    <div class="polaroid-old-money rotate-[2.5deg] shadow-md"><div class="h-44 rounded bg-mocca-dark overflow-hidden mb-2"><img src="img/foto (29).jpeg" alt="Cartel" class="w-full h-full object-cover"></div><p class="old-money-subtitle text-center text-xs text-mocca-dark dark:text-white font-semibold">24-05-26 📝</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GOLDEN FINALE -->
+    <section class="py-16 px-4 max-w-4xl mx-auto">
+        <div class="gold-sparkle-card rounded-2xl p-8 md:p-12 text-center text-white relative overflow-hidden shadow-2xl">
+            <div class="absolute inset-0 bg-[radial-gradient(#FDE68A_1px,transparent_1px)] [background-size:16px_16px] opacity-20 pointer-events-none"></div>
+            <span class="tape-turquoise mb-4 inline-block">Cierre Especial ✨</span>
+            <h2 class="old-money-title text-3xl md:text-5xl font-bold text-gold-light uppercase tracking-widest my-3">¡Gracias por visitar mi página web!</h2>
+            <p class="old-money-script text-4xl md:text-6xl text-turquoise-soft capitalize mt-2">Con mucho amor, Mishelle Yaira 💕</p>
+            <p class="old-money-sans text-xs text-gold-light/80 mt-6 uppercase tracking-widest font-semibold">Huancayo ➔ Lima • MMXXVI • Todos los derechos reservados</p>
+        </div>
+    </section>
+
+    <!-- MODAL SOBRE MÍ (Fotos 3, 4, 5) -->
+    <div id="bioModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-mocca-bg dark:bg-mocca-nightCard border border-turquoise-soft/40 rounded-2xl max-w-4xl w-full p-6 md:p-10 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeBioModal()" class="absolute top-5 right-5 p-2 bg-white dark:bg-mocca-dark hover:bg-mocca-soft rounded-full text-mocca-dark dark:text-mocca-soft transition z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="text-center mb-6">
+                <span class="tape-turquoise">Sobre Mí & Mis Raíces 💖✨</span>
+                <h2 class="old-money-title text-2xl font-bold text-mocca-dark dark:text-white mt-3 uppercase tracking-widest">Mishelle <span class="old-money-script text-3xl text-turquoise-soft capitalize">Yaira</span></h2>
+                <p class="old-money-subtitle text-sm text-mocca-lightBrown dark:text-mocca-soft/80 mt-1">Nacida el 3 de Mayo de 2012 • Huancayo ➔ Lima • Signo Tauro ♉</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <!-- Foto 3 -->
+                <div class="polaroid-old-money rotate-[-1.5deg] text-center"><div class="h-48 rounded bg-mocca-soft overflow-hidden mb-2"><img src="img/foto (3).jpeg" alt="Bebé" class="w-full h-full object-cover"></div><span class="old-money-subtitle text-xs text-mocca-dark dark:text-white font-semibold">Nací el 3 de Mayo, 2012 👶</span></div>
+                <!-- Foto 4 -->
+                <div class="polaroid-old-money rotate-[1deg] text-center"><div class="h-48 rounded bg-mocca-soft overflow-hidden mb-2"><img src="img/foto (4).jpeg" alt="Vestido Blanco" class="w-full h-full object-cover"></div><span class="old-money-subtitle text-xs text-mocca-dark dark:text-white font-semibold">Mi Vestido Blanco Elegante ✨</span></div>
+                <!-- Foto 5 -->
+                <div class="polaroid-old-money rotate-[-1deg] text-center"><div class="h-48 rounded bg-mocca-soft overflow-hidden mb-2"><img src="img/foto (5).jpeg" alt="Papá" class="w-full h-full object-cover"></div><span class="old-money-subtitle text-xs text-mocca-dark dark:text-white font-semibold">Con mi Papá & Raíces Huancas 🏔️</span></div>
+            </div>
+            <div class="space-y-4 text-xs md:text-sm text-mocca-brown dark:text-mocca-soft/90 bg-white dark:bg-mocca-dark/60 p-6 rounded-xl border border-mocca-brown/15">
+                <p>🐣 <strong>Nacimiento:</strong> Nací el 3 de mayo de 2012 en Huancayo. Vivo en Lima y curso el 2.º de secundaria.</p>
+                <p>🏔️ <strong>Raíces & Cultura:</strong> Orgullosa huanca, amante de la tradicional <em>Danza de los Abelinos de San Jerónimo de Tunán</em>.</p>
+                <p>🎸 <strong>Pasiones:</strong> Rock en español (Soda Stereo / Cerati), conciertos en vivo, makis con amigos y preparar slime fluffy.</p>
+            </div>
+            <div class="mt-6 text-center"><button onclick="closeBioModal()" class="bg-mocca-dark dark:bg-turquoise-soft text-white dark:text-mocca-dark px-8 py-3 rounded-full old-money-sans text-xs font-bold">Cerrar</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL REALMENTE SOY YO (Fotos 6, 7, 8) -->
+    <div id="realMeModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-mocca-bg dark:bg-mocca-nightCard border border-turquoise-soft/50 rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto p-6 md:p-10 shadow-2xl relative">
+            <button onclick="closeRealMeModal()" class="absolute top-5 right-5 p-2 bg-white dark:bg-mocca-dark hover:bg-mocca-soft rounded-full text-mocca-dark dark:text-mocca-soft transition z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="text-center mb-8 border-b border-mocca-brown/15 pb-6">
+                <span class="tape-turquoise">Bóveda de Recuerdos 👑✨</span>
+                <h2 class="old-money-title text-3xl md:text-4xl font-bold text-mocca-dark dark:text-white mt-3 uppercase tracking-widest">Fotos donde <span class="old-money-script text-4xl text-turquoise-soft capitalize">Realmente Soy Yo</span> 🤪📸</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Foto 6 -->
+                <div class="polaroid-old-money rotate-[-2deg] flex flex-col justify-between border-2 border-turquoise-soft/40 shadow-lg"><div class="h-64 rounded bg-mocca-soft overflow-hidden mb-3"><img src="img/foto (6).jpeg" alt="Modo ejecutiva" class="w-full h-full object-cover"></div><div><span class="tape-turquoise mb-2 text-[9px]">Momento Chiquita 👶</span><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Modo Ejecutiva 👔</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">Usando la corbata gigante de mi papá. Carismática y feliz desde pequeñita.</p></div></div>
+                <!-- Foto 7 -->
+                <div class="polaroid-old-money rotate-[1.5deg] flex flex-col justify-between border-2 border-turquoise-soft/40 shadow-lg"><div class="h-64 rounded bg-mocca-soft overflow-hidden mb-3"><img src="img/foto (7).jpeg" alt="Halloween" class="w-full h-full object-cover"></div><div><span class="tape-turquoise mb-2 text-[9px]">Halloween & Disfraces 🎃</span><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Locuras de Noche 🎭</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">Disfrutando al máximo las noches de disfraces, bromas y risas.</p></div></div>
+                <!-- Foto 8 -->
+                <div class="polaroid-old-money rotate-[-1deg] flex flex-col justify-between border-2 border-turquoise-soft/40 shadow-lg"><div class="h-64 rounded bg-mocca-soft overflow-hidden mb-3"><img src="img/foto (8).jpeg" alt="Selfie" class="w-full h-full object-cover"></div><div><span class="tape-turquoise mb-2 text-[9px]">Selfie Auténtica ✨</span><h4 class="old-money-header text-base font-bold text-mocca-dark dark:text-white">Filtros & Gafas 👓</h4><p class="text-xs text-mocca-brown dark:text-mocca-soft/80 mt-1">Mi estilo espontáneo del día a día. ¡Siempre sonriendo!</p></div></div>
+            </div>
+            <div class="mt-10 text-center"><button onclick="closeRealMeModal()" class="bg-mocca-dark dark:bg-turquoise-soft text-white dark:text-mocca-dark px-8 py-3 rounded-full old-money-sans text-xs font-bold">¡Gracias por ver mi esencia! 💖</button></div>
+        </div>
+    </div>
+
+    <!-- ANECDOTE MODAL -->
+    <div id="anecdoteModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-mocca-bg dark:bg-mocca-nightCard border border-mocca-brown/30 rounded-2xl max-w-2xl w-full p-6 md:p-10 shadow-2xl relative">
+            <button onclick="closeAnecdoteModal()" class="absolute top-5 right-5 p-2 bg-white dark:bg-mocca-dark rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="text-center mb-8"><span class="tape-turquoise">El día del ambientador 🥛⚠️</span><h2 class="old-money-title text-2xl font-bold text-mocca-dark dark:text-white mt-3 uppercase">Leche vs. Limpiador de Piso</h2></div>
+            <div class="bg-white dark:bg-mocca-dark/60 p-6 rounded-xl space-y-4 text-xs md:text-sm text-mocca-brown dark:text-mocca-soft/90">
+                <p>Abrí la refrigeradora buscando leche y vi una botella de plástico transparente con líquido blanco... ¡y me serví un vaso entero! 🥛</p>
+                <p>Pero no era leche, era <strong>ambientador de pisos sabor pino</strong> que mi mamá guardó ahí. 😭</p>
+                <p>Terminé en emergencias del hospital, ¡pero hoy toda mi familia se mata de risa! 😂</p>
+            </div>
+            <div class="mt-8 text-center"><button onclick="closeAnecdoteModal()" class="bg-mocca-dark dark:bg-turquoise-soft text-white dark:text-mocca-dark px-8 py-3 rounded-full old-money-sans text-xs font-bold">Cerrar Anécdota</button></div>
+        </div>
+    </div>
+
+    <!-- FAVORITES MODAL -->
+    <div id="favsModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-mocca-bg dark:bg-mocca-nightCard border border-mocca-brown/30 rounded-2xl max-w-3xl w-full p-6 md:p-10 shadow-2xl relative">
+            <button onclick="closeFavsModal()" class="absolute top-5 right-5 p-2 bg-white dark:bg-mocca-dark rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="text-center mb-6"><span class="tape-turquoise">Mis Gustos Musicales & Artistas</span><h2 class="old-money-title text-2xl font-bold text-mocca-dark dark:text-white mt-2 uppercase">Mi Algoritmo de Música 🎧</h2></div>
+            <div class="space-y-4 text-xs md:text-sm text-mocca-brown dark:text-mocca-soft/90">
+                <div class="p-4 bg-white dark:bg-mocca-dark rounded-xl border"><p class="font-bold text-mocca-dark dark:text-white mb-2">👑 Top Favorito Número 1:</p><p>• <strong>Gustavo Cerati / Soda Stereo</strong></p></div>
+                <div class="p-4 bg-white dark:bg-mocca-dark rounded-xl border"><p class="font-bold text-mocca-dark dark:text-white mb-2">🎶 Artistas:</p><div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs"><span class="p-2 bg-mocca-soft dark:bg-mocca-brown/30 rounded font-semibold">• Omar Courtz</span><span class="p-2 bg-mocca-soft dark:bg-mocca-brown/30 rounded font-semibold">• Olivia Rodrigo</span><span class="p-2 bg-mocca-soft dark:bg-mocca-brown/30 rounded font-semibold">• Melanie Martinez</span><span class="p-2 bg-mocca-soft dark:bg-mocca-brown/30 rounded font-semibold">• Mitski</span><span class="p-2 bg-mocca-soft dark:bg-mocca-brown/30 rounded font-semibold">• Mac DeMarco</span><span class="p-2 bg-mocca-soft dark:bg-mocca-brown/30 rounded font-semibold">• Lana Del Rey</span><span class="p-2 bg-mocca-soft dark:bg-mocca-brown/30 rounded font-semibold">• TV Girl</span><span class="p-2 bg-mocca-soft dark:bg-mocca-brown/30 rounded font-semibold">• Kanye West</span><span class="p-2 bg-mocca-soft dark:bg-mocca-brown/30 rounded font-semibold">• Britney Spears</span></div></div>
+            </div>
+            <div class="mt-6 text-center"><button onclick="closeFavsModal()" class="bg-mocca-dark dark:bg-turquoise-soft text-white dark:text-mocca-dark px-6 py-2.5 rounded-full old-money-sans text-xs font-bold">Cerrar</button></div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        lucide.createIcons();
+        let isTokyoMood = false;
+        function toggleTokyoMood() {
+            isTokyoMood = !isTokyoMood;
+            document.body.classList.toggle('dark', isTokyoMood);
+            document.getElementById('moodIcon').innerText = isTokyoMood ? '☕' : '🗼';
+            document.getElementById('moodText').innerText = isTokyoMood ? 'OLD MONEY CLASSIC' : 'NOCHE EN TOKIO';
+        }
+        function openBioModal() { document.getElementById('bioModal').classList.remove('hidden'); }
+        function closeBioModal() { document.getElementById('bioModal').classList.add('hidden'); }
+        function openFavsModal() { document.getElementById('favsModal').classList.remove('hidden'); }
+        function closeFavsModal() { document.getElementById('favsModal').classList.add('hidden'); }
+        function openAnecdoteModal() { document.getElementById('anecdoteModal').classList.remove('hidden'); }
+        function closeAnecdoteModal() { document.getElementById('anecdoteModal').classList.add('hidden'); }
+        function openRealMeModal() {
+            document.getElementById('realMeModal').classList.remove('hidden');
+            if (typeof confetti === 'function') { confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#A2E8DD', '#79D7C9', '#4A322C', '#FDE68A'] }); }
+        }
+        function closeRealMeModal() { document.getElementById('realMeModal').classList.add('hidden'); }
+        
+        // Control del Audio Automático
+        const audio = document.getElementById('background-audio');
+        if (audio) {
+            audio.volume = 0.4;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    const startAudioOnInteraction = () => {
+                        audio.play();
+                        document.removeEventListener('click', startAudioOnInteraction);
+                        document.removeEventListener('scroll', startAudioOnInteraction);
+                    };
+                    document.addEventListener('click', startAudioOnInteraction);
+                    document.addEventListener('scroll', startAudioOnInteraction);
+                });
+            }
+        }
+
+        // Countdown Timer
+        function updateCountdown() {
+            const target = new Date('May 3, 2027 00:00:00').getTime();
+            const now = new Date().getTime();
+            const diff = target - now;
+            if (diff > 0) {
+                document.getElementById('days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                document.getElementById('hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Sparkle Trail Canvas
+        const canvas = document.getElementById('sparkleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        class Particle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.size = Math.random() * 3.5 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.color = isTokyoMood ? '#79D7C9' : (Math.random() > 0.5 ? '#FDE68A' : '#9E8279');
+                this.life = 1;
+            }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life -= 0.02; }
+            draw() {
+                ctx.save(); ctx.globalAlpha = Math.max(this.life, 0); ctx.fillStyle = this.color;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+            }
+        }
+        window.addEventListener('mousemove', (e) => { if (Math.random() < 0.6) particles.push(new Particle(e.clientX, e.clientY)); });
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update(); particles[i].draw();
+                if (particles[i].life <= 0) particles.splice(i, 1);
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
